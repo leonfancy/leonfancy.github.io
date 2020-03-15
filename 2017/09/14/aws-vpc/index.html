@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> AWS VPC简介以及EC2的IPv6配置 · 陈亮的个人博客</title><meta name="description" content="AWS VPC简介以及EC2的IPv6配置 - Leon Chen"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://chenleon.me/atom.xml" title="陈亮的个人博客"><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="陈亮的个人博客" type="application/atom+xml">
+</head><body><div class="wrap"><header><a class="logo-link" href="/"><img src="/logo.svg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">过往</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://github.com/leonfancy" target="_blank">GITHUB</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">AWS VPC简介以及EC2的IPv6配置</h1><div class="post-info">2017年9月14日</div><div class="post-content"><p>Amazon VPC (Virtual Private Cloud) 是AWS的网络基础设施。使用VPC服务可以在AWS中创建一个独立隔离的网络，在这个隔离的网络空间中可以创建任何AWS资源，例如EC2、Redis、RDS数据库等等，VPC网络使这些AWS资源互相连接，传递数据，并且提供外网访问的网关。</p>
+<p>实际上很多人可能不知道，如果你已经在使用AWS的EC2，你就已经在不知不觉中使用了VPC。当我们最开始使用AWS服务时，AWS为我们创建了一个默认的VPC网络，我们创建的EC2实例（如果不手动选择）都默认加入到了这个VPC网络中。EC2、RDS等资源必须创建在一个VPC网路中，才能互相联通，访问网络。</p>
+<a id="more"></a>
+
+<p><img src="/images/default_vpc.png" alt="Default VPC"></p>
+<p>除了默认的VPC，我们也可以自己创建VPC网络。VPC同时支持IPv4和IPv6组网，一个VPC网络由多个部分组成。</p>
+<h3 id="VPC和子网-Subnet"><a href="#VPC和子网-Subnet" class="headerlink" title="VPC和子网(Subnet)"></a>VPC和子网(Subnet)</h3><p>当新建一个VPC，需要为虚拟网络定义IP地址范围作为CIDR地址，例如CIDR为<code>10.1.0.0/16</code>。IPv4的CIDR可以手动指定，但是IPv6的CIDR只能由AWS自动分配。</p>
+<blockquote>
+<p>CIDR（无类别域间路由，Classless Inter-Domain Routing）将IP地址按照前缀分成一组，使用一种无类别的域际路由选择算法，大大减少了路由表维护的条目数。</p>
+</blockquote>
+<p>VPC的IP地址段可以进一步划分IP段，从而创建子网(Subnet)。一个VPC横跨多个可用区(Availability Zone)，但是一个子网只能位于一个可用区里面。</p>
+<p>创建EC2、RDS等AWS资源的时候，除了要选择VPC，还要选择创建到VPC的哪个子网里面。EC2会被自动分配一个所属子网IP段内的私有IP地址，如果想要分配公网IP地址，需要手动指定弹性IP，或者可以配置子网自动为EC2分配公网IP地址。如果想要让EC2被外网访问到，除了需要配置公网IP地址，还需要配置子网的路由表，使其可以通过VPC网关(Internet Gateway)访问外网。</p>
+<p>Subnet是一个VPC里面一个IP段. 创建任何AWS资源的时候可以选择一个Subnet。</p>
+<p>AWS 以前没有VPC，而是叫做EC2-Classic的网络。2013年之后就支持EC2-VPC了。 对于只支持VPC的新账户，会有一个Default VPC，并且在每个Availability Zone里面都有一个默认的Default Subnet，新账号就默认使用个VPC，而不用自己选择。当然也可以自己创建VPC。</p>
+<p>Default VPC 里面默认配置了网关(Internet Gateway)，而且配置好了到网关的路由，每个Default Subnet里面的EC2都默认分配私有IP和公网IP。因此Default Subnet里面的EC2都是可以外网访问的。</p>
+<h3 id="Internet-Gateway和Route-Table"><a href="#Internet-Gateway和Route-Table" class="headerlink" title="Internet Gateway和Route Table"></a>Internet Gateway和Route Table</h3><p>VPC是一个独立的虚拟的网络，与AWS其它的VPC、与外网都是隔离开得。如果想要让外网访问VPC里面的EC2，必须通过网关（Internet Gateway）。网关是VPC连接外网的组件，可以为VPC分配多个网关，每个网关都有唯一的ID，例如<code>igw-8727e8e2</code>。配置路由表的时候，网关ID作为路由表的目标地址（target）。</p>
+<blockquote>
+<p>如果只想让instance主动访问外网，不想让外网主动访问instance。IPv4可以使用<strong>NAT</strong>，IPv6可以使用<strong>Egress-Only Internet Gateways</strong>。</p>
+</blockquote>
+<p>VPC里面的Subnet都关联了一张路由表(Route Table)，路由表定义了VPC网络里面的网络流量的传输路径。</p>
+<p>每个VPC创建之后都自动配置了一个路由表，这种关联在VPC上的路由表叫做主路由表(Main Route Table)。主路由表不能删除，但是可以替换为别的路由表。 每个Subnet创建之后默认使用主路由表，但是可以为Subnet创建一个自定义路由表(Custom Route Table)来设置特定路由规则。自定义路由表可以删除，删除之后就使用VPC的主路由表。</p>
+<p>e.g. 一个使用主路由表的例子<br><img src="/images/aws_vpc_subnets.png" alt="Default VPC"></p>
+<p>在上面这个例子中，VPC的网段为<code>10.1.0.0/16</code>，里面有两个子网：<code>10.1.1.0/24</code>和<code>10.1.2.0/24</code>。这两个子网没有自定义路由表，因此都使用VPC的主路由表。</p>
+<p>主路由表中有两条路由规则：</p>
+<ul>
+<li>destination为<code>10.1.0.0/16</code>表示VPC内部的流量，因为VPC网段下的所有IP地址都是<code>10.1</code>开头。这些流量的target是<code>local</code>，表示内部之间通信。</li>
+<li>destination为<code>0.0.0.0/0</code>表示访问外网IP的流量，这些流量通过target指定ID的Internet Gateway访问外网。</li>
+</ul>
+<h3 id="Security-Group"><a href="#Security-Group" class="headerlink" title="Security Group"></a>Security Group</h3><p>安全组（Security Group）定义了防火墙规则，包括出站规则和入站规则，可以细化到哪个IP段可以访问哪个端口。</p>
+<h3 id="为VPC中的EC2配置IPv6"><a href="#为VPC中的EC2配置IPv6" class="headerlink" title="为VPC中的EC2配置IPv6"></a>为VPC中的EC2配置IPv6</h3><p>VPC默认是使用IPv4来组网的，如果想要支持IPv6，创建VPC的时候需要手动指定CIDR IPv6地址段。对于已经创建好的IPv6 VPC，也可以添加IPv6 CIDR。</p>
+<p>和IPv4不同的是，VPC的IPv6 CIDR前缀长度固定为<code>/56</code>。Subnet的IPv6 CIDR固定为<code>/64</code>。而且IPv6的CIDR段不能手动设置，全靠AWS自动分配。 </p>
+<blockquote>
+<p>和 IPv4 不同的是 IPv6 地址不区分私有地址和共网地址 </p>
+</blockquote>
+<p>要想创建的 EC2 实例添加IPv6，需要满足以下两个条件：</p>
+<ul>
+<li>EC2实例所属的Subnet配置了IPv6 CIDR</li>
+<li>创建EC2实例的时候勾选上<code>Auto-assign IPv6 IP</code>设置。如果Subnet设置了<code>Enable auto-assign IPv6 address</code>选项，那么创建EC2的时候不需要再手动选择分配IPv6地址了。</li>
+</ul>
+<blockquote>
+<p>不管Instance的状态是start还是stop，Instance的IPv6地址都不会被释放。只有当Instance Terminate的时候，IPv6地址才会释放。</p>
+</blockquote>
+<p>让一个VPC支持IPv6需要完成一下配置：</p>
+<ul>
+<li>在VPC管理界面，选择想要更改的VPC，右键编辑他的<code>CIDRs</code>，在选项中添加IPv6 CIDR。AWS将自动分配一个IPv6 CIDR。</li>
+<li>找到VPC下面的Subnet，为想要修改的Subnet分配IPv6 CIDR。</li>
+<li>在VPC的主路由表里面添加一行路由表，destination设置为<code>::/0</code>，target为对应网关的ID。让IPv6流量通过网关访问到外网。</li>
+</ul>
+<p>如果想要让一个支持IPv6的Subnet里面的EC2实例支持IPv6，还需要做如下配置：</p>
+<ul>
+<li>在 AWS EC2 管理界面里面选择要修改的EC2实例，在Actions里面选择Manage IP Address选项可以为EC2实例添加IPv6地址。</li>
+<li>修改实例关联的Security Group，添加IPv6地址的Inbound/Outbound规则。 </li>
+</ul>
+<p><strong>注意</strong>：虽然在 AWS EC2 管理界面里面为实例分配了IPv6地址，但是操作系统里面未必识别到了IPv6地址。如果实例使用的是Amazon Linux 2016.09.0以后的版本，则实例会自动获得IPv6地址。但是Ubuntu/CentOS系统不能获得IPv6地址，需要在系统里面做进一步配置。</p>
+<p>在Ubuntu 16.04系统里面执行如下命令可以马上获得分配的IPv6地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dhclient -6</span><br></pre></td></tr></table></figure>
+
+<p>但是这个命令会在系统重启之后失效，为了让下次重启的时候，能够自动IPv6地址，执行下面的命令配置DHCPv6：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/network/interfaces.d/60-default-with-ipv6.cfg</span><br><span class="line">// 在文件中添加: iface eth0 inet6 dhcp</span><br><span class="line"> </span><br><span class="line">sudo ifdown eth0 ; sudo ifup eth0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>有时候执行<code>dhclient</code>命令不工作，只能用第二种方法。</p>
+</blockquote>
+<p>为了让新建的Ubuntu实例也自动支持IPv6，需要将这一行加入到UserData中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"iface eth0 inet6 dhcp"</span> &gt;&gt; /etc/network/interfaces.d/60-default-with-ipv6.cfg</span><br></pre></td></tr></table></figure>
+
+</div></article></div></main><footer><div class="paginator"><a class="prev" href="/2018/10/12/docker-basics/">上一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'chen-leon';
+var disqus_identifier = '2017/09/14/aws-vpc/';
+var disqus_title = 'AWS VPC简介以及EC2的IPv6配置';
+var disqus_url = 'http://chenleon.me/2017/09/14/aws-vpc/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script><div class="copyright"><p>© 2017 - 2020 <a href="http://chenleon.me">Leon Chen</a></p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-106539432-1",'auto');ga('send','pageview');</script></body></html>
