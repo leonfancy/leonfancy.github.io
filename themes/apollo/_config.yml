@@ -1,0 +1,19 @@
+menu:
+    主页: /
+    过往: /archives/
+    GitHub: https://github.com/leonfancy
+
+favicon: /favicon.png
+logo: /logo.svg
+
+# Comment
+# e.g disqus: seansun
+disqus: chen-leon
+duoshuo:
+
+# Analytics
+# google-analytics:
+ga: UA-106539432-1
+
+# Copyright Infomation
+startyear: 2017
