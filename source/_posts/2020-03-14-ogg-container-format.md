@@ -54,9 +54,10 @@ byte value
 固定值`OggS`。
 
 ### 2.2 版本号（Version）
+
 ```plain
 byte value
- 4   0x4f 
+ 4   0x00 
 ```
 
 Ogg格式的版本号，目前固定为0。
