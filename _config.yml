@@ -99,3 +99,8 @@ theme: apollo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: ''
+
+# Mathjax support
+## Docs: https://github.com/stevenjoezhang/hexo-filter-mathjax
+mathjax:
+  single_dollars: true

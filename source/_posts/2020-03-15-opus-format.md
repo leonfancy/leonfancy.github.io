@@ -357,7 +357,8 @@ TOC 字节后，紧跟着两个帧的数据，两个帧的大小各占这个包�
 
 
 **参考文献：**
-[1] Voice frequency: https://en.wikipedia.org/wiki/Voice_frequency
-[2] CELT: https://en.wikipedia.org/wiki/CELT
-[3] Definition of the Opus Audio Codec: https://tools.ietf.org/html/rfc6716
-[4] 5.1 surround sound: https://en.wikipedia.org/wiki/5.1_surround_sound
+
+1. Voice frequency: https://en.wikipedia.org/wiki/Voice_frequency
+2. CELT: https://en.wikipedia.org/wiki/CELT
+3. Definition of the Opus Audio Codec: https://tools.ietf.org/html/rfc6716
+4. 5.1 surround sound: https://en.wikipedia.org/wiki/5.1_surround_sound
