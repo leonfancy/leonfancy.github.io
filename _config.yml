@@ -104,3 +104,7 @@ deploy:
 ## Docs: https://github.com/stevenjoezhang/hexo-filter-mathjax
 mathjax:
   single_dollars: true
+
+# Fix `hexo server` cuts off in the middle of long post
+server:
+  compress: true
