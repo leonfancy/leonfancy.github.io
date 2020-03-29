@@ -6,7 +6,8 @@ branches:
   only:
     - hexo # build hexo branch only
 before_install:
-  - sudo apt-get install -y pandoc
+  - wget https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
+  - sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
 script:
   - hexo generate # generate static files
 deploy:
