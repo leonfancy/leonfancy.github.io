@@ -105,6 +105,10 @@ deploy:
 mathjax:
   single_dollars: true
 
+pandoc:
+  extensions:
+    - "+hard_line_breaks"
+
 # Fix `hexo server` cuts off in the middle of long post
 server:
   compress: true

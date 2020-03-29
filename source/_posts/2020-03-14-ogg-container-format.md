@@ -218,14 +218,13 @@ Ogg页2包含整个包3和包2的最后一个分段，因此Ogg页2头里面的�
 -------------------
 
 **参考文献：**
-
-1. Ogg bitstream overview: https://www.xiph.org/ogg/doc/oggstream.html
-2. Ogg logical bitstream framing: https://www.xiph.org/ogg/doc/framing.html
-3. Ogg: https://en.wikipedia.org/wiki/Ogg
-4. Ogg Media Types: https://tools.ietf.org/html/rfc5334
-5. Specification of MIME types and respective codecs parameter: https://wiki.xiph.org/index.php/MIMETypesCodecs
-6. The application/ogg Media Type: https://tools.ietf.org/html/rfc3534
-7. The Ogg Encapsulation Format Version 0: https://tools.ietf.org/html/rfc3533
+[1] Ogg bitstream overview: https://www.xiph.org/ogg/doc/oggstream.html
+[2] Ogg logical bitstream framing: https://www.xiph.org/ogg/doc/framing.html
+[3] Ogg: https://en.wikipedia.org/wiki/Ogg
+[4] Ogg Media Types: https://tools.ietf.org/html/rfc5334
+[5] Specification of MIME types and respective codecs parameter: https://wiki.xiph.org/index.php/MIMETypesCodecs
+[6] The application/ogg Media Type: https://tools.ietf.org/html/rfc3534
+[7] The Ogg Encapsulation Format Version 0: https://tools.ietf.org/html/rfc3533
 
 
 
