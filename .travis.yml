@@ -1,4 +1,3 @@
-sudo: false
 language: node_js
 node_js:
   - 10 # use nodejs v10 LTS
@@ -6,6 +5,8 @@ cache: npm
 branches:
   only:
     - hexo # build hexo branch only
+before_install:
+  - sudo apt-get install -y pandoc
 script:
   - hexo generate # generate static files
 deploy:
