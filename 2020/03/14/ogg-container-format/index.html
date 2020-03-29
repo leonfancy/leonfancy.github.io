@@ -184,7 +184,12 @@ mjx-container + br {
 <p>由于分段个数只占一个字节，它的最大值为255，分段表中每个分段值也只占一个字节，对应的分段大小最大为255字节。因此一个Ogg页的最大有效负载为 255 * 255 = 65025 字节，这种情况下，Ogg页的头大小为 ：27（固定大小） + 255（分段表大小） = 282 字节。整个Ogg页最大的长度为 65025 + 282 = 65307。</p>
 <p>这个逻辑上的分段机制可以看出，虽然Ogg页的大小有限制，但是对于多媒体编码器输出的包大小没有限制，大于65025字节的包可以分开在多个连续的Ogg页里面存储，分段机制保证了解码器可以识别到包的开始和结尾。</p>
 <h2 id="ogg-媒体类型定义">3. Ogg 媒体类型定义</h2>
-<p>针对Ogg格式，Xiph.Org在IANA注册了三种MIME类型。分别是： - application/ogg - video/ogg - audio/ogg</p>
+<p>针对Ogg格式，Xiph.Org在IANA注册了三种MIME类型。分别是：</p>
+<ul>
+<li>application/ogg</li>
+<li>video/ogg</li>
+<li>audio/ogg</li>
+</ul>
 <p>在标准制定的早期，Ogg专门用来封装Vorbis编码格式的语音，并且在<a href="https://tools.ietf.org/html/rfc3534" target="_blank" rel="noopener">RFC3534</a>中定义了<code>application/ogg</code>类型来指代封装在Ogg格式中的Vorbis语音。不过随着技术的发展，Ogg被单独提出来作为一种可以封装任意媒体类型的容器格式。于是<a href="https://tools.ietf.org/html/rfc3534" target="_blank" rel="noopener">RFC3534</a>草案被废弃，在新的草案<a href="https://tools.ietf.org/html/rfc5334" target="_blank" rel="noopener">RFC5334</a>中重新定义了<code>application/ogg</code>的意义，并且定义了<code>video/ogg</code>和<code>audio/ogg</code>两种新的类型。</p>
 <p><strong>video/ogg</strong></p>
 <p>当一个Ogg流的主要信息是视频（可能包括音频和字幕），那么传输的时候应当使用<code>video/ogg</code>类型。存储成文件时应当使用<code>.ogv</code>扩展名。</p>
