@@ -140,9 +140,12 @@ mjx-container + br {
 </blockquote>
 <p>VPC里面的Subnet都关联了一张路由表(Route Table)，路由表定义了VPC网络里面的网络流量的传输路径。</p>
 <p>每个VPC创建之后都自动配置了一个路由表，这种关联在VPC上的路由表叫做主路由表(Main Route Table)。主路由表不能删除，但是可以替换为别的路由表。 每个Subnet创建之后默认使用主路由表，但是可以为Subnet创建一个自定义路由表(Custom Route Table)来设置特定路由规则。自定义路由表可以删除，删除之后就使用VPC的主路由表。</p>
-<p>e.g. 一个使用主路由表的例子 <img src="/images/aws_vpc_subnets.png" alt="Default VPC" /></p>
+<p>e.g. 一个使用主路由表的例子<br />
+<img src="/images/aws_vpc_subnets.png" alt="Default VPC" /></p>
 <p>在上面这个例子中，VPC的网段为<code>10.1.0.0/16</code>，里面有两个子网：<code>10.1.1.0/24</code>和<code>10.1.2.0/24</code>。这两个子网没有自定义路由表，因此都使用VPC的主路由表。</p>
-<p>主路由表中有两条路由规则： - destination为<code>10.1.0.0/16</code>表示VPC内部的流量，因为VPC网段下的所有IP地址都是<code>10.1</code>开头。这些流量的target是<code>local</code>，表示内部之间通信。 - destination为<code>0.0.0.0/0</code>表示访问外网IP的流量，这些流量通过target指定ID的Internet Gateway访问外网。</p>
+<p>主路由表中有两条路由规则：<br />
+- destination为<code>10.1.0.0/16</code>表示VPC内部的流量，因为VPC网段下的所有IP地址都是<code>10.1</code>开头。这些流量的target是<code>local</code>，表示内部之间通信。<br />
+- destination为<code>0.0.0.0/0</code>表示访问外网IP的流量，这些流量通过target指定ID的Internet Gateway访问外网。</p>
 <h3 id="security-group">Security Group</h3>
 <p>安全组（Security Group）定义了防火墙规则，包括出站规则和入站规则，可以细化到哪个IP段可以访问哪个端口。</p>
 <h3 id="为vpc中的ec2配置ipv6">为VPC中的EC2配置IPv6</h3>
@@ -151,7 +154,9 @@ mjx-container + br {
 <blockquote>
 <p>和 IPv4 不同的是 IPv6 地址不区分私有地址和共网地址</p>
 </blockquote>
-<p>要想创建的 EC2 实例添加IPv6，需要满足以下两个条件： - EC2实例所属的Subnet配置了IPv6 CIDR - 创建EC2实例的时候勾选上<code>Auto-assign IPv6 IP</code>设置。如果Subnet设置了<code>Enable auto-assign IPv6 address</code>选项，那么创建EC2的时候不需要再手动选择分配IPv6地址了。</p>
+<p>要想创建的 EC2 实例添加IPv6，需要满足以下两个条件：<br />
+- EC2实例所属的Subnet配置了IPv6 CIDR<br />
+- 创建EC2实例的时候勾选上<code>Auto-assign IPv6 IP</code>设置。如果Subnet设置了<code>Enable auto-assign IPv6 address</code>选项，那么创建EC2的时候不需要再手动选择分配IPv6地址了。</p>
 <blockquote>
 <p>不管Instance的状态是start还是stop，Instance的IPv6地址都不会被释放。只有当Instance Terminate的时候，IPv6地址才会释放。</p>
 </blockquote>

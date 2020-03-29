@@ -150,7 +150,11 @@ mjx-container + br {
 <p>从上面的字节序可以看出位置数采用小端字节序，这也是Ogg的默认字节序。</p>
 <p>每个Ogg页上的位置数表示从这个逻辑流开始，到这个Ogg页上最后一个完结的包所包含的样本数。如果一个包只有开头或中间的一部分在这个Ogg页里面，那么这部分的包含的样本数不计算在位置数里面。</p>
 <p>如果这个值为<code>-1</code>（以补码表示），那么说明这个页里面没有任何完结的包。</p>
-<p>下面用一个例子来说明位置数。一个逻辑流由6个包组成，这个包按照下图的方式封装在4个Ogg页里面形成一个Ogg物理流。 - Ogg页1里面包2是这个页里面最后一个完结的包，从开头的包1开始算起，到这个包2一共有40个样本，因此Ogg页1的位置数为40。 - Ogg页2里面没有任何一个包是在该页结束的，因此位置数为-1。 - Ogg页3里面最后一个完结的包是包4，从开始到包4结尾一共有120个样本数，因此Ogg页3的位置数为120。 - Ogg页4里面最后一个完结的包是包6，从开始到包6结尾一共有160个样本数，因此Ogg页4的位置数为160。</p>
+<p>下面用一个例子来说明位置数。一个逻辑流由6个包组成，这个包按照下图的方式封装在4个Ogg页里面形成一个Ogg物理流。<br />
+- Ogg页1里面包2是这个页里面最后一个完结的包，从开头的包1开始算起，到这个包2一共有40个样本，因此Ogg页1的位置数为40。<br />
+- Ogg页2里面没有任何一个包是在该页结束的，因此位置数为-1。<br />
+- Ogg页3里面最后一个完结的包是包4，从开始到包4结尾一共有120个样本数，因此Ogg页3的位置数为120。<br />
+- Ogg页4里面最后一个完结的包是包6，从开始到包6结尾一共有160个样本数，因此Ogg页4的位置数为160。</p>
 <p><img src="/images/ogg_container_format/5.png" style="width: 100%; max-width: 600px"/></p>
 <p>对于不同类型的多媒体和编解码器，位置数的含义不一样，例如对于视频来说，它表示帧数，对于音频来说，它表示采样数。</p>
 <h3 id="逻辑流编号bitstream-serial-number">2.5 逻辑流编号（Bitstream Serial Number）</h3>
@@ -200,16 +204,14 @@ mjx-container + br {
 <p>当一个Ogg流非常复杂，不是单纯的视频或者音频，例如传输多路视频信号，这种情况下就建议使用<code>application/ogg</code>类型。存储文件使用<code>.ogx</code>扩展名。</p>
 <p>对于这些MIME类型，还可以指定<code>codec</code>参数来表示Ogg流中的数据编码格式。例如传输Opus格式语音就可以使用：<code>audio/ogg; codecs=opus</code>。目前支持的codec可以参考https://wiki.xiph.org/index.php/MIMETypesCodecs。</p>
 <hr />
-<p><strong>参考文献：</strong></p>
-<ol type="1">
-<li>Ogg bitstream overview: https://www.xiph.org/ogg/doc/oggstream.html</li>
-<li>Ogg logical bitstream framing: https://www.xiph.org/ogg/doc/framing.html</li>
-<li>Ogg: https://en.wikipedia.org/wiki/Ogg</li>
-<li>Ogg Media Types: https://tools.ietf.org/html/rfc5334</li>
-<li>Specification of MIME types and respective codecs parameter: https://wiki.xiph.org/index.php/MIMETypesCodecs</li>
-<li>The application/ogg Media Type: https://tools.ietf.org/html/rfc3534</li>
-<li>The Ogg Encapsulation Format Version 0: https://tools.ietf.org/html/rfc3533</li>
-</ol>
+<p><strong>参考文献：</strong><br />
+[1] Ogg bitstream overview: https://www.xiph.org/ogg/doc/oggstream.html<br />
+[2] Ogg logical bitstream framing: https://www.xiph.org/ogg/doc/framing.html<br />
+[3] Ogg: https://en.wikipedia.org/wiki/Ogg<br />
+[4] Ogg Media Types: https://tools.ietf.org/html/rfc5334<br />
+[5] Specification of MIME types and respective codecs parameter: https://wiki.xiph.org/index.php/MIMETypesCodecs<br />
+[6] The application/ogg Media Type: https://tools.ietf.org/html/rfc3534<br />
+[7] The Ogg Encapsulation Format Version 0: https://tools.ietf.org/html/rfc3533</p>
 </div></article></div></main><footer><div class="paginator"><a class="prev" href="/2020/03/15/opus-format/">上一篇</a><a class="next" href="/2018/10/12/docker-basics/">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'chen-leon';
 var disqus_identifier = '2020/03/14/ogg-container-format/';
 var disqus_title = 'Ogg容器格式';

@@ -249,7 +249,11 @@ mjx-container + br {
 <h3 id="不同帧结构的包">不同帧结构的包</h3>
 <p>根据一个包的 TOC 字节中帧数（c）的不同取值，我们把这个包命名为：<strong>c 号包</strong>。下面我们介绍这 4 种不同帧结构的包。</p>
 <blockquote>
-<p><strong>帧长度编码</strong> 当一个包含有多个 VBR 的音频帧时，那么除了最后一个音频帧，前面几个帧都需要对帧的长度进行编码。存储帧长度的编码占用 1 ~ 2 个字节，其规则如下： - 第一个字节取值为 0：表示没有任何帧数据（这通常是非连续传输（DTX）或者音频包丢失） - 第一个字节取值为 1 ~ 251：表示第一帧的字节数 - 第一个字节取值为 252 ~ 255：第二个字节也参与编码帧长度，第一帧的总字节数为：<code>(第二字节*4)+第一字节</code></p>
+<p><strong>帧长度编码</strong><br />
+当一个包含有多个 VBR 的音频帧时，那么除了最后一个音频帧，前面几个帧都需要对帧的长度进行编码。存储帧长度的编码占用 1 ~ 2 个字节，其规则如下：<br />
+- 第一个字节取值为 0：表示没有任何帧数据（这通常是非连续传输（DTX）或者音频包丢失）<br />
+- 第一个字节取值为 1 ~ 251：表示第一帧的字节数<br />
+- 第一个字节取值为 252 ~ 255：第二个字节也参与编码帧长度，第一帧的总字节数为：<code>(第二字节*4)+第一字节</code></p>
 <p>因此一个帧的最大长度为：255 * 4 + 255 = <strong>1275</strong> 字节。对于一个 20ms 的帧来说，这个长度代表 510 kbit/s 的码率。这个码率几乎是立体声音乐的有损压缩编码最高有效码率。超过这个码率，最好采用无损编码。这也是 MDCT 算法的最高有效码率，超过这个值，在增加码率进行编码，音频的质量也不会跟着提高。</p>
 </blockquote>
 <h4 id="号包-一个包只包含一帧音频">0 号包: 一个包只包含一帧音频</h4>
@@ -307,12 +311,10 @@ mjx-container + br {
 <p>在一些场景下，自划界包有实际的用途。根据标准，Opus 只能编码单声道或者双声道立体声音频。因此一个 Opus 码流要不就是单声道的，要不就是双声道的。如果要传输或者存储多声道（大于2）的音频，就需要复合多个 Opus 流。例如 5.1 环绕立体声有 6 个声道，传输或者存储这样一个音频，可能需要组合多个单声道或双声道的 Opus 流。</p>
 <p>假如 5.1 环绕立体声由 2 个双声道，2 个单声道的 Opus 流组成。那么需要将这 4 个 Opus 流复合成一个流，每次从 4 个 Opus 流中各取一个包，组成一个复合音频包。每个复合音频包就包含四个包，分别来自同一时刻不同的 Opus 流。为了让解码器能够顺利从复合音频包中识别出四个包，就需要让前三个包采用自划界格式的编码。一般来说复合包的总大小会通过容器格式或者传输协议信息告诉解码器，因此复合包里面最后一个子 Opus 包不需要采用自划界包格式，可以直接推断出来。</p>
 <p><strong>参考文献：</strong></p>
-<ol type="1">
-<li>Voice frequency: https://en.wikipedia.org/wiki/Voice_frequency</li>
-<li>CELT: https://en.wikipedia.org/wiki/CELT</li>
-<li>Definition of the Opus Audio Codec: https://tools.ietf.org/html/rfc6716</li>
-<li>5.1 surround sound: https://en.wikipedia.org/wiki/5.1_surround_sound</li>
-</ol>
+<p>[1] Voice frequency: https://en.wikipedia.org/wiki/Voice_frequency<br />
+[2] CELT: https://en.wikipedia.org/wiki/CELT<br />
+[3] Definition of the Opus Audio Codec: https://tools.ietf.org/html/rfc6716<br />
+[4] 5.1 surround sound: https://en.wikipedia.org/wiki/5.1_surround_sound</p>
 </div></article></div></main><footer><div class="paginator"><a class="next" href="/2020/03/14/ogg-container-format/">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'chen-leon';
 var disqus_identifier = '2020/03/15/opus-format/';
 var disqus_title = 'Opus 音频编码格式';
