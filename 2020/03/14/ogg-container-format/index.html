@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Ogg容器格式 · 陈亮的个人博客</title><meta name="description" content="Ogg容器格式 - Leon Chen"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://chenleon.me/atom.xml" title="陈亮的个人博客"><meta name="generator" content="Hexo 4.2.0"><style>mjx-container[jax="SVG"] {
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Ogg 容器格式 · 陈亮的个人博客</title><meta name="description" content="Ogg 容器格式 - Leon Chen"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://chenleon.me/atom.xml" title="陈亮的个人博客"><meta name="generator" content="Hexo 4.2.0"><style>mjx-container[jax="SVG"] {
   direction: ltr;
 }
 
@@ -116,7 +116,7 @@ mjx-container + br {
   display: none;
 }
 </style><link rel="alternate" href="/atom.xml" title="陈亮的个人博客" type="application/atom+xml">
-</head><body><div class="wrap"><header><a class="logo-link" href="/"><img src="/logo.svg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">过往</a></li><li class="nav-list-item"><a class="nav-list-link" href="/about-me" target="_self">联系我</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Ogg容器格式</h1><div class="post-info">2020年3月14日</div><div class="post-content"><p>Ogg是<a href="https://xiph.org/" target="_blank" rel="noopener">Xiph.Org</a>基金会推出的一种开源免费的多媒体容器格式。Ogg容器格式可以用于封装音频、视频、字幕、以及多媒体元信息。它既适用于流媒体传输，又能作为文件格式存储多媒体。</p>
+</head><body><div class="wrap"><header><a class="logo-link" href="/"><img src="/logo.svg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">过往</a></li><li class="nav-list-item"><a class="nav-list-link" href="/about-me" target="_self">联系我</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Ogg 容器格式</h1><div class="post-info">2020年3月14日</div><div class="post-content"><p>Ogg是<a href="https://xiph.org/" target="_blank" rel="noopener">Xiph.Org</a>基金会推出的一种开源免费的多媒体容器格式。Ogg容器格式可以用于封装音频、视频、字幕、以及多媒体元信息。它既适用于流媒体传输，又能作为文件格式存储多媒体。</p>
 <a id="more"></a>
 <blockquote>
 <p>容器格式和编码格式有区别。编码指的是将原始多媒体数据按照规定的算法将原始数据进行压缩编码，使其占用的空间更小，方便传输和存储。这个压缩编码的算法就叫做编码格式，例如视频的编码格式有：H.264、H.265（又叫做HEVC）、Theora等等，音频的编码格式有：Vorbis、ACC、FLAC、Opus等等。实现这些压缩编码算法的软件叫做编码器。而容器格式是用来封装编码之后的数据，容器格式提供了分包机制和元信息可以帮助解码器解码，而且容器可以将多种不同的编码数据复合在一起，例如视频、音频、字幕可以封装到一个容器格式里面。常用的容器格式有：MKV、MP4、AVI等等，Ogg也是容器格式一种。</p>
@@ -150,11 +150,13 @@ mjx-container + br {
 <p>从上面的字节序可以看出位置数采用小端字节序，这也是Ogg的默认字节序。</p>
 <p>每个Ogg页上的位置数表示从这个逻辑流开始，到这个Ogg页上最后一个完结的包所包含的样本数。如果一个包只有开头或中间的一部分在这个Ogg页里面，那么这部分的包含的样本数不计算在位置数里面。</p>
 <p>如果这个值为<code>-1</code>（以补码表示），那么说明这个页里面没有任何完结的包。</p>
-<p>下面用一个例子来说明位置数。一个逻辑流由6个包组成，这个包按照下图的方式封装在4个Ogg页里面形成一个Ogg物理流。<br />
-- Ogg页1里面包2是这个页里面最后一个完结的包，从开头的包1开始算起，到这个包2一共有40个样本，因此Ogg页1的位置数为40。<br />
-- Ogg页2里面没有任何一个包是在该页结束的，因此位置数为-1。<br />
-- Ogg页3里面最后一个完结的包是包4，从开始到包4结尾一共有120个样本数，因此Ogg页3的位置数为120。<br />
-- Ogg页4里面最后一个完结的包是包6，从开始到包6结尾一共有160个样本数，因此Ogg页4的位置数为160。</p>
+<p>下面用一个例子来说明位置数。一个逻辑流由6个包组成，这个包按照下图的方式封装在4个Ogg页里面形成一个Ogg物理流。</p>
+<ul>
+<li>Ogg页1里面包2是这个页里面最后一个完结的包，从开头的包1开始算起，到这个包2一共有40个样本，因此Ogg页1的位置数为40。</li>
+<li>Ogg页2里面没有任何一个包是在该页结束的，因此位置数为-1。</li>
+<li>Ogg页3里面最后一个完结的包是包4，从开始到包4结尾一共有120个样本数，因此Ogg页3的位置数为120。</li>
+<li>Ogg页4里面最后一个完结的包是包6，从开始到包6结尾一共有160个样本数，因此Ogg页4的位置数为160。</li>
+</ul>
 <p><img src="/images/ogg_container_format/5.png" style="width: 100%; max-width: 600px"/></p>
 <p>对于不同类型的多媒体和编解码器，位置数的含义不一样，例如对于视频来说，它表示帧数，对于音频来说，它表示采样数。</p>
 <h3 id="逻辑流编号bitstream-serial-number">2.5 逻辑流编号（Bitstream Serial Number）</h3>
@@ -214,7 +216,7 @@ mjx-container + br {
 [7] The Ogg Encapsulation Format Version 0: https://tools.ietf.org/html/rfc3533</p>
 </div></article></div></main><footer><div class="paginator"><a class="prev" href="/2020/03/15/opus-format/">上一篇</a><a class="next" href="/2018/10/12/docker-basics/">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'chen-leon';
 var disqus_identifier = '2020/03/14/ogg-container-format/';
-var disqus_title = 'Ogg容器格式';
+var disqus_title = 'Ogg 容器格式';
 var disqus_url = 'http://chenleon.me/2020/03/14/ogg-container-format/';
 (function() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
