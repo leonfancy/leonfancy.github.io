@@ -121,7 +121,7 @@ mjx-container + br {
 <blockquote>
 <p>容器格式和编码格式有区别。编码指的是将原始多媒体数据按照规定的算法将原始数据进行压缩编码，使其占用的空间更小，方便传输和存储。这个压缩编码的算法就叫做编码格式，例如视频的编码格式有：H.264、H.265（又叫做HEVC）、Theora等等，音频的编码格式有：Vorbis、ACC、FLAC、Opus等等。实现这些压缩编码算法的软件叫做编码器。而容器格式是用来封装编码之后的数据，容器格式提供了分包机制和元信息可以帮助解码器解码，而且容器可以将多种不同的编码数据复合在一起，例如视频、音频、字幕可以封装到一个容器格式里面。常用的容器格式有：MKV、MP4、AVI等等，Ogg也是容器格式一种。</p>
 </blockquote>
-<h2 id="ogg-二进制流">1. Ogg 二进制流</h2>
+<h2 id="ogg-二进制流"><a href="#ogg-二进制流" class="headerLink" title="ogg-二进制流"></a>1. Ogg 二进制流</h2>
 <p>多媒体编码器输出的是一串二进制包（Packet），包通常是解码器解码的最小单位。这些包之间通常没有分割标志，如果直接把这些包拼接在一起形成一个二进制流，那么没有任何解码器可以读出其中的包并进行解码，因为解码器将找不到每个包从哪里开始，从哪里结束。</p>
 <p><img src="/images/ogg_container_format/1.png" style="width: 100%; max-width: 500px"/></p>
 <p>Ogg容器格式将多媒体编码器产生的二进制包进行封装，并且提供分割信息，这样解码器就可以通过读取Ogg格式的封装信息，将二进制包一个一个拆出来进行解码。</p>
@@ -131,21 +131,21 @@ mjx-container + br {
 <p>一个Ogg物理流中可以包含多个逻辑流，例如一个Ogg文件中包含了视频、音频以及字幕三个逻辑流。如果一个Ogg流只有一个逻辑流，那么它称为一个<strong>基础流</strong> （Elementary Bitstream），如果包含多个逻辑流，那么它称为<strong>复合流</strong>（Multiplexed Bitstream）。</p>
 <p>多个基础流通过Ogg页交错的方式组合成一个复合流，也就是将不同基础流中同样时间点的Ogg页放到一起。</p>
 <p><img src="/images/ogg_container_format/3.png" style="width: 100%; max-width: 500px"/></p>
-<h2 id="ogg-页的格式">2. Ogg 页的格式</h2>
+<h2 id="ogg-页的格式"><a href="#ogg-页的格式" class="headerLink" title="ogg-页的格式"></a>2. Ogg 页的格式</h2>
 <p>Ogg页是Ogg物理流的基本单位。一个Ogg页由头和负载两部分组成，并且总是由<code>OggS</code>四个字节开头，这四个字节称为捕获标志（Capture Pattern）。当客户端解码器从中途开始接收服务端推送的流媒体比特流时，搜索到比特流中的第一个<code>OggS</code>标志，就可以从这里开始进行比特流的解码。</p>
 <p>Ogg页头部格式如下图所示：</p>
 <p><img src="/images/ogg_container_format/4.png" style="width: 100%; max-width: 400px"/></p>
-<h3 id="捕获标志capture">2.1 捕获标志（Capture）</h3>
+<h3 id="捕获标志capture"><a href="#捕获标志capture" class="headerLink" title="捕获标志capture"></a>2.1 捕获标志（Capture）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line"> 0   0x4f  &#39;O&#39;</span><br><span class="line"> 1   0x67  &#39;g&#39;</span><br><span class="line"> 2   0x67  &#39;g&#39;</span><br><span class="line"> 3   0x53  &#39;S&#39;</span><br></pre></td></tr></table></figure>
 <p>固定值<code>OggS</code>。</p>
-<h3 id="版本号version">2.2 版本号（Version）</h3>
+<h3 id="版本号version"><a href="#版本号version" class="headerLink" title="版本号version"></a>2.2 版本号（Version）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line"> 4   0x00</span><br></pre></td></tr></table></figure>
 <p>Ogg格式的版本号，目前固定为0。</p>
-<h3 id="头类型标志header-type">2.3 头类型标志（Header Type）</h3>
+<h3 id="头类型标志header-type"><a href="#头类型标志header-type" class="headerLink" title="头类型标志header-type"></a>2.3 头类型标志（Header Type）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line"> 5   bitflags: 0x01: 置0 &#x3D; 从新的包开始</span><br><span class="line">                     置1 &#x3D; 这个页里面的包接着上一个页里面的包</span><br><span class="line">               0x02: 置0 &#x3D; 不是逻辑流的第一个Ogg页</span><br><span class="line">                     置1 &#x3D; 逻辑流的第一个Ogg页（bos）</span><br><span class="line">               0x04: 置0 &#x3D; 不是逻辑流的最后一个Ogg页</span><br><span class="line">                     置1 &#x3D; 逻辑流的最后一个Ogg页（eos）</span><br></pre></td></tr></table></figure>
 <p>占一个字节，根据最低的三个比特位是否设置为1表示不同的信息。</p>
 <p>这里特别说明一下最低位<code>0x01</code>的意义，当一个包太大，导致一个Ogg页放不下，或者Ogg页已经放了很多个包，剩下的位置不够再放一个包，那么一个包就可能横跨两个连续的Ogg页。这个包开头的部分在第一页，后半部分在第二页。这种情况下，第二页的头类型标志的最低位就会置为1。</p>
-<h3 id="位置数granule-position">2.4 位置数（Granule Position）</h3>
+<h3 id="位置数granule-position"><a href="#位置数granule-position" class="headerLink" title="位置数granule-position"></a>2.4 位置数（Granule Position）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line"> 6   0xXX LSB</span><br><span class="line"> 7   0xXX</span><br><span class="line"> 8   0xXX</span><br><span class="line"> 9   0xXX</span><br><span class="line">10   0xXX</span><br><span class="line">11   0xXX</span><br><span class="line">12   0xXX</span><br><span class="line">13   0xXX MSB</span><br></pre></td></tr></table></figure>
 <p>从上面的字节序可以看出位置数采用小端字节序，这也是Ogg的默认字节序。</p>
 <p>每个Ogg页上的位置数表示从这个逻辑流开始，到这个Ogg页上最后一个完结的包所包含的样本数。如果一个包只有开头或中间的一部分在这个Ogg页里面，那么这部分的包含的样本数不计算在位置数里面。</p>
@@ -159,18 +159,18 @@ mjx-container + br {
 </ul>
 <p><img src="/images/ogg_container_format/5.png" style="width: 100%; max-width: 600px"/></p>
 <p>对于不同类型的多媒体和编解码器，位置数的含义不一样，例如对于视频来说，它表示帧数，对于音频来说，它表示采样数。</p>
-<h3 id="逻辑流编号bitstream-serial-number">2.5 逻辑流编号（Bitstream Serial Number）</h3>
+<h3 id="逻辑流编号bitstream-serial-number"><a href="#逻辑流编号bitstream-serial-number" class="headerLink" title="逻辑流编号bitstream-serial-number"></a>2.5 逻辑流编号（Bitstream Serial Number）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">14   0xXX LSB</span><br><span class="line">15   0xXX</span><br><span class="line">16   0xXX</span><br><span class="line">17   0xXX MSB</span><br></pre></td></tr></table></figure>
 <p>当多个逻辑流复合在一个Ogg物理流里面时，每个逻辑流都会有一个独特的编号，其对应的Ogg页都打上对应编号，用于区分这个Ogg页属于哪一个逻辑流。</p>
-<h3 id="页序列号page-sequence-no">2.6 页序列号（Page Sequence No）</h3>
+<h3 id="页序列号page-sequence-no"><a href="#页序列号page-sequence-no" class="headerLink" title="页序列号page-sequence-no"></a>2.6 页序列号（Page Sequence No）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">18   0xXX LSB</span><br><span class="line">19   0xXX</span><br><span class="line">20   0xXX</span><br><span class="line">21   0xXX MSB</span><br></pre></td></tr></table></figure>
 <p>Ogg流里面每个Ogg页都有一个按顺序增长的序号，这样如果在传输的时候有一页丢失了，解码器可以通过检查序号很快发现丢失的页。</p>
 <p>如果一个Ogg物理流里面有多个逻辑流，那么每个逻辑流的Ogg页序列号是独立增长的。</p>
-<h3 id="校验和checksum">2.7 校验和（Checksum）</h3>
+<h3 id="校验和checksum"><a href="#校验和checksum" class="headerLink" title="校验和checksum"></a>2.7 校验和（Checksum）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">22   0xXX LSB</span><br><span class="line">23   0xXX</span><br><span class="line">24   0xXX</span><br><span class="line">25   0xXX MSB</span><br></pre></td></tr></table></figure>
 <p>当前整个Ogg页的CRC校验和，计算包括头部数据，只是在计算前将校验和字段的四个字节置为0，计算后将得到的值再设置进去。</p>
 <p>计算时，初始值和最后的XOR值为0，generator polynomial 为 0x04c11db7。</p>
-<h3 id="分段个数page-segments分段表segment-table">2.8 分段个数（Page Segments）、分段表（Segment Table）</h3>
+<h3 id="分段个数page-segments分段表segment-table"><a href="#分段个数page-segments分段表segment-table" class="headerLink" title="分段个数page-segments分段表segment-table"></a>2.8 分段个数（Page Segments）、分段表（Segment Table）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">26   0x00-0xff (0-255)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">27   0x00-0xff (0-255)</span><br><span class="line">[...]</span><br><span class="line">n    0x00-0xff (0-255, n&#x3D;page_segments+26)</span><br></pre></td></tr></table></figure>
 <p>Ogg格式规定将一个包看成由多个大小为255字节的分段和最后一个可能小于255字节分段组成。例如一个包的大小为702字节，那么可以看是由三个分段组成大小分别为：255、255、192。如果将这个包封装到Ogg页中，那么Ogg头里面的<strong>分段个数</strong>值为3，<strong>分段表</strong>将有三个字节，值分别为：255、255、192。</p>
@@ -189,7 +189,7 @@ mjx-container + br {
 <p>从上面的分析可以看出Ogg格式对包的分段只是逻辑上的，只是用于计算分段个数和分段表中的值，并不会在负载中的包里面插入任何分隔符。</p>
 <p>由于分段个数只占一个字节，它的最大值为255，分段表中每个分段值也只占一个字节，对应的分段大小最大为255字节。因此一个Ogg页的最大有效负载为 255 * 255 = 65025 字节，这种情况下，Ogg页的头大小为 ：27（固定大小） + 255（分段表大小） = 282 字节。整个Ogg页最大的长度为 65025 + 282 = 65307。</p>
 <p>这个逻辑上的分段机制可以看出，虽然Ogg页的大小有限制，但是对于多媒体编码器输出的包大小没有限制，大于65025字节的包可以分开在多个连续的Ogg页里面存储，分段机制保证了解码器可以识别到包的开始和结尾。</p>
-<h2 id="ogg-媒体类型定义">3. Ogg 媒体类型定义</h2>
+<h2 id="ogg-媒体类型定义"><a href="#ogg-媒体类型定义" class="headerLink" title="ogg-媒体类型定义"></a>3. Ogg 媒体类型定义</h2>
 <p>针对Ogg格式，Xiph.Org在IANA注册了三种MIME类型。分别是：</p>
 <ul>
 <li>application/ogg</li>

@@ -123,7 +123,7 @@ mjx-container + br {
 <img src="/images/default_vpc.png" alt="" /><figcaption>Default VPC</figcaption>
 </figure>
 <p>除了默认的VPC，我们也可以自己创建VPC网络。VPC同时支持IPv4和IPv6组网，一个VPC网络由多个部分组成。</p>
-<h3 id="vpc和子网subnet">VPC和子网(Subnet)</h3>
+<h3 id="vpc和子网subnet"><a href="#vpc和子网subnet" class="headerLink" title="vpc和子网subnet"></a>VPC和子网(Subnet)</h3>
 <p>当新建一个VPC，需要为虚拟网络定义IP地址范围作为CIDR地址，例如CIDR为<code>10.1.0.0/16</code>。IPv4的CIDR可以手动指定，但是IPv6的CIDR只能由AWS自动分配。</p>
 <blockquote>
 <p>CIDR（无类别域间路由，Classless Inter-Domain Routing）将IP地址按照前缀分成一组，使用一种无类别的域际路由选择算法，大大减少了路由表维护的条目数。</p>
@@ -133,7 +133,7 @@ mjx-container + br {
 <p>Subnet是一个VPC里面一个IP段. 创建任何AWS资源的时候可以选择一个Subnet。</p>
 <p>AWS 以前没有VPC，而是叫做EC2-Classic的网络。2013年之后就支持EC2-VPC了。 对于只支持VPC的新账户，会有一个Default VPC，并且在每个Availability Zone里面都有一个默认的Default Subnet，新账号就默认使用个VPC，而不用自己选择。当然也可以自己创建VPC。</p>
 <p>Default VPC 里面默认配置了网关(Internet Gateway)，而且配置好了到网关的路由，每个Default Subnet里面的EC2都默认分配私有IP和公网IP。因此Default Subnet里面的EC2都是可以外网访问的。</p>
-<h3 id="internet-gateway和route-table">Internet Gateway和Route Table</h3>
+<h3 id="internet-gateway和route-table"><a href="#internet-gateway和route-table" class="headerLink" title="internet-gateway和route-table"></a>Internet Gateway和Route Table</h3>
 <p>VPC是一个独立的虚拟的网络，与AWS其它的VPC、与外网都是隔离开得。如果想要让外网访问VPC里面的EC2，必须通过网关（Internet Gateway）。网关是VPC连接外网的组件，可以为VPC分配多个网关，每个网关都有唯一的ID，例如<code>igw-8727e8e2</code>。配置路由表的时候，网关ID作为路由表的目标地址（target）。</p>
 <blockquote>
 <p>如果只想让instance主动访问外网，不想让外网主动访问instance。IPv4可以使用<strong>NAT</strong>，IPv6可以使用<strong>Egress-Only Internet Gateways</strong>。</p>
@@ -146,9 +146,9 @@ mjx-container + br {
 <p>主路由表中有两条路由规则：<br />
 - destination为<code>10.1.0.0/16</code>表示VPC内部的流量，因为VPC网段下的所有IP地址都是<code>10.1</code>开头。这些流量的target是<code>local</code>，表示内部之间通信。<br />
 - destination为<code>0.0.0.0/0</code>表示访问外网IP的流量，这些流量通过target指定ID的Internet Gateway访问外网。</p>
-<h3 id="security-group">Security Group</h3>
+<h3 id="security-group"><a href="#security-group" class="headerLink" title="security-group"></a>Security Group</h3>
 <p>安全组（Security Group）定义了防火墙规则，包括出站规则和入站规则，可以细化到哪个IP段可以访问哪个端口。</p>
-<h3 id="为vpc中的ec2配置ipv6">为VPC中的EC2配置IPv6</h3>
+<h3 id="为vpc中的ec2配置ipv6"><a href="#为vpc中的ec2配置ipv6" class="headerLink" title="为vpc中的ec2配置ipv6"></a>为VPC中的EC2配置IPv6</h3>
 <p>VPC默认是使用IPv4来组网的，如果想要支持IPv6，创建VPC的时候需要手动指定CIDR IPv6地址段。对于已经创建好的IPv6 VPC，也可以添加IPv6 CIDR。</p>
 <p>和IPv4不同的是，VPC的IPv6 CIDR前缀长度固定为<code>/56</code>。Subnet的IPv6 CIDR固定为<code>/64</code>。而且IPv6的CIDR段不能手动设置，全靠AWS自动分配。</p>
 <blockquote>
