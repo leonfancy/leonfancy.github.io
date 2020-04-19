@@ -12,10 +12,10 @@ before_install:
   - which pyenv
   - pyenv --version
   - which python
-  - whicn pip
+  - which pip
   - pyenv global 3.7.1
   - which python
-  - whicn pip
+  - which pip
   - pip install panflute
 script:
   - hexo generate # generate static files
