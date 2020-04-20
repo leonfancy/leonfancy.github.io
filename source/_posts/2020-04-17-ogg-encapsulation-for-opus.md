@@ -43,7 +43,7 @@ Ogg 流是由一个一个 Ogg 页（Ogg Page）组成的，每个 Ogg 页封装�
 
 假设一个多声道音频流由 N 个 Opus 流组成，把 N 个流在同一时间点上的 N 个 Opus 包组合在一起就形成一个**音频包**。为了在一个音频包里面区分出 N 个 Opus 包，一个音频包里面前 （N-1）个 Opus 包采用[**带分界（Self-Delimiting）的包格式**](https://tools.ietf.org/html/rfc6716#appendix-B)，最后一个包采用标准 Opus 包格式。另外需要注意的是一个音频包里面的所有 Opus 包代表的时间长度必须相同。
 
-<img src="/images/ogg_encapsulation_for_opus/1.png" style="width: 100%; max-width: 600px"/>
+![3 个 Opus 流组合成一个 Ogg 逻辑流，每个音频包由相同时间点上的 3 个 Opus 包组成](/images/ogg_encapsulation_for_opus/1.png){width=650}
 
 对于单声道或者双声道立体声，N 通常为 1，对于多声道音频来说 N 大于 1。N 的具体值定义在了 ID 头里面，并且在整个 Ogg 逻辑流里面保持不变。
 
@@ -193,7 +193,7 @@ $$
 
 **声道映射关系**（Channel Mapping）占 C 个字节。每个字节对应一个输出声道，它的值表示解码出来声道与输出声道的对应关系。这个表就相当于建立了 M + N 个解码声道与 C 个输出声道的关系。假设某个字节的值为`index`，这个值要么是小于 M + N 的，要么等于特殊值 255。假如`index`小于 `2*M`，那么解码出的第`index/2`个 Opus 流是个双声道流，如果`index`是偶数，输出声道就取这个流的左声道，如果是奇数，就取右声道。假如`index`大于 `2*M` 且小于 255，那么解码出的第`index - M`个 Opus 流是单声道的，那么输出声道就取自这个流。如果`index`等于 255，那么输出声道就是纯粹的静音。
 
-<img src="/images/ogg_encapsulation_for_opus/2.png" style="width: 100%; max-width: 600px"/>
+![N = 3，M = 2。表示 Ogg 流里面包含 3 个 Opus 流，每个音频包由 3 个 Opus 包组成，前 2 个 Opus 包解码成双声道，第 3 个 Opus 包解码成单声道。图中还给出了不同的 index 取值，对应于哪个 Opus 流的哪个声道](/images/ogg_encapsulation_for_opus/2.png){width=600}
 
 输出声道数 C 并不一定要等于解码声道数 M + N。相同的`index`值可能会多次出现，也就是说多个输出声道对应相同的解码声道，同时有些解码声道没有对应的输出声道。
 
