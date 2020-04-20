@@ -123,18 +123,26 @@ mjx-container + br {
 </blockquote>
 <h2 id="ogg-二进制流"><a href="#ogg-二进制流" class="headerLink" title="ogg-二进制流"></a>1. Ogg 二进制流</h2>
 <p>多媒体编码器输出的是一串二进制包（Packet），包通常是解码器解码的最小单位。这些包之间通常没有分割标志，如果直接把这些包拼接在一起形成一个二进制流，那么没有任何解码器可以读出其中的包并进行解码，因为解码器将找不到每个包从哪里开始，从哪里结束。</p>
-<p><img src="/images/ogg_container_format/1.png" style="width: 100%; max-width: 500px"/></p>
+<figure>
+<img src="/images/ogg_container_format/1.png" width="500" alt="" /><figcaption>裸的二进制包缺乏分割标志，拼在一起将无法被处理</figcaption>
+</figure>
 <p>Ogg容器格式将多媒体编码器产生的二进制包进行封装，并且提供分割信息，这样解码器就可以通过读取Ogg格式的封装信息，将二进制包一个一个拆出来进行解码。</p>
 <p>我们将编码器生成的二进制流称为<strong>逻辑流</strong>（Logical Bitstream），把Ogg封装之后二进制流称为<strong>物理流</strong>（Physical Bitstream）。之所以这么称呼是因为编码生成的裸二进制流实际上无法被任何工具处理，只能存在于逻辑概念，而 Ogg 封装过后的流却是可以被实际操作处理的。</p>
-<p><img src="/images/ogg_container_format/2.png" style="width: 100%; max-width: 500px"/></p>
+<figure>
+<img src="/images/ogg_container_format/2.png" width="500" alt="" /><figcaption>将裸的二进制流封装之后成为物理流</figcaption>
+</figure>
 <p>Ogg物理流的基本组成单位是 <strong>Ogg 页</strong>（Ogg Page）。编码器输出的二进制包就是按照Ogg格式的规则放到Ogg页中的。Ogg的规范十分灵活，一个Ogg页可以存放一个包、多个包、甚至是一包的一部分。正因为Ogg格式对编码器输出的包大小没有要求，使得Ogg格式可以用于多种视频、音频编码格式的封装。</p>
 <p>一个Ogg物理流中可以包含多个逻辑流，例如一个Ogg文件中包含了视频、音频以及字幕三个逻辑流。如果一个Ogg流只有一个逻辑流，那么它称为一个<strong>基础流</strong> （Elementary Bitstream），如果包含多个逻辑流，那么它称为<strong>复合流</strong>（Multiplexed Bitstream）。</p>
 <p>多个基础流通过Ogg页交错的方式组合成一个复合流，也就是将不同基础流中同样时间点的Ogg页放到一起。</p>
-<p><img src="/images/ogg_container_format/3.png" style="width: 100%; max-width: 500px"/></p>
+<figure>
+<img src="/images/ogg_container_format/3.png" width="500" alt="" /><figcaption>多个流复合成一个流</figcaption>
+</figure>
 <h2 id="ogg-页的格式"><a href="#ogg-页的格式" class="headerLink" title="ogg-页的格式"></a>2. Ogg 页的格式</h2>
 <p>Ogg页是Ogg物理流的基本单位。一个Ogg页由头和负载两部分组成，并且总是由<code>OggS</code>四个字节开头，这四个字节称为捕获标志（Capture Pattern）。当客户端解码器从中途开始接收服务端推送的流媒体比特流时，搜索到比特流中的第一个<code>OggS</code>标志，就可以从这里开始进行比特流的解码。</p>
 <p>Ogg页头部格式如下图所示：</p>
-<p><img src="/images/ogg_container_format/4.png" style="width: 100%; max-width: 400px"/></p>
+<figure>
+<img src="/images/ogg_container_format/4.png" width="400" alt="" /><figcaption>Ogg头部结构</figcaption>
+</figure>
 <h3 id="捕获标志capture"><a href="#捕获标志capture" class="headerLink" title="捕获标志capture"></a>2.1 捕获标志（Capture）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line"> 0   0x4f  &#39;O&#39;</span><br><span class="line"> 1   0x67  &#39;g&#39;</span><br><span class="line"> 2   0x67  &#39;g&#39;</span><br><span class="line"> 3   0x53  &#39;S&#39;</span><br></pre></td></tr></table></figure>
 <p>固定值<code>OggS</code>。</p>
@@ -157,7 +165,9 @@ mjx-container + br {
 <li>Ogg页3里面最后一个完结的包是包4，从开始到包4结尾一共有120个样本数，因此Ogg页3的位置数为120。</li>
 <li>Ogg页4里面最后一个完结的包是包6，从开始到包6结尾一共有160个样本数，因此Ogg页4的位置数为160。</li>
 </ul>
-<p><img src="/images/ogg_container_format/5.png" style="width: 100%; max-width: 600px"/></p>
+<figure>
+<img src="/images/ogg_container_format/5.png" width="600" alt="" /><figcaption>位置数与包大小和排列的关系</figcaption>
+</figure>
 <p>对于不同类型的多媒体和编解码器，位置数的含义不一样，例如对于视频来说，它表示帧数，对于音频来说，它表示采样数。</p>
 <h3 id="逻辑流编号bitstream-serial-number"><a href="#逻辑流编号bitstream-serial-number" class="headerLink" title="逻辑流编号bitstream-serial-number"></a>2.5 逻辑流编号（Bitstream Serial Number）</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byte value</span><br><span class="line">14   0xXX LSB</span><br><span class="line">15   0xXX</span><br><span class="line">16   0xXX</span><br><span class="line">17   0xXX MSB</span><br></pre></td></tr></table></figure>
@@ -177,7 +187,9 @@ mjx-container + br {
 <p><strong>分段个数</strong>占一个字节，表示这个Ogg页里面有多少个包的分段。<strong>分段表</strong>的大小由<strong>分段个数</strong>决定，其中每个字节的值代表了对应分段的大小。</p>
 <p>这个分段机制为解码器提供了区分包边界的方法，如果分段表中一个值小于255，那么代表这个包已经结束了，下一个分段就代表一个新的包开始。</p>
 <p>用一个例子来说明这个机制，下图有三个包存储在了两个Ogg页中。</p>
-<p><img src="/images/ogg_container_format/6.png" style="width: 100%; max-width: 350px"/></p>
+<figure>
+<img src="/images/ogg_container_format/6.png" width="350" alt="" /><figcaption>Ogg分段示意图</figcaption>
+</figure>
 <ul>
 <li>包1大小为702字节，可以分成三个段：255、255、192。</li>
 <li>包2大小为574字节，可以分成三个段：255、255、64。</li>
