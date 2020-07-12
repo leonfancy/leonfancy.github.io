@@ -51,7 +51,7 @@ Ogg 流是由一个一个 Ogg 页（Ogg Page）组成的，每个 Ogg 页封装�
 
 ## 位置数（Granule Position）
 
-根据 Ogg 格式的标准，每个 Ogg 页的头部都有一个位置数字段。位置数至关重要，它代表当前页音频数据的播放时间点。包含 ID 头和包含注解头结尾的两个 Ogg 页的位置数为 0，这是因为这两个包不是音频，因此不占用播放时间。音频 Ogg 页的位置数是从音频流开始到当前页中最后一个完结音频包所包含的总 PCM 采样数。如果一个 Ogg 页里面没有一个完结的包，那么这个页的位置数为 -1（以补码的形式编码）。关于 Ogg 页位置数字段的详细解释，请参考[《Ogg 容器格式》](https://chenleon.me/2020/03/14/ogg-container-format/)这篇文章。
+根据 Ogg 格式的标准，每个 Ogg 页的头部都有一个位置数字段。位置数至关重要，它代表当前页音频数据的播放时间点。包含 ID 头和包含注解头结尾的两个 Ogg 页的位置数为 0，这是因为这两个包不是音频，因此不占用播放时间。音频 Ogg 页的位置数是从音频流开始到当前页中最后一个完结音频包所包含的总 PCM 采样数。如果一个 Ogg 页里面没有一个完结的包，那么这个页的位置数为 -1（以补码的形式编码）。关于 Ogg 页位置数字段的详细解释，请参考[《Ogg 容器格式》](https://chenliang.org/2020/03/14/ogg-container-format/)这篇文章。
 
 音频 Ogg 页的位置数记录的是按照 48kHz 的采样率解码得到的 PCM 采样数。（并且是按照一个声道的采样数来计算。同样时间长度的音频，多声道的位置数并不比单声道的大）。解码器也可以按照其它采样率来解码，但是因为 Opus 编码时使用的采样率都能被 48kHz 除尽，因此一律按照 48kHz 的解码采样率来计算位置数是一种简单有效的办法。
 
@@ -270,5 +270,5 @@ $$
 [1] Self-Delimiting Framing: https://tools.ietf.org/html/rfc6716#appendix-B
 [2] Ogg Vorbis I format specification: comment field and header specification: https://www.xiph.org/vorbis/doc/v-comment.html
 [3] Ogg Encapsulation for the Opus Audio Codec: https://tools.ietf.org/html/rfc7845
-[4] Ogg容器格式: https://chenleon.me/2020/03/14/ogg-container-format
-[5] Opus 音频编码格式: https://chenleon.me/2020/03/15/opus-format/
+[4] Ogg容器格式: https://chenliang.org/2020/03/14/ogg-container-format
+[5] Opus 音频编码格式: https://chenliang.org/2020/03/15/opus-format/
