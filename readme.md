@@ -15,6 +15,19 @@ cd blog
 npm install 
 ```
 
+安装 pandoc
+
+```
+brew install pandoc
+choco install pandoc 
+```
+
+安装 panflute
+
+```
+pip install panflute
+```
+
 ## 写博客
 
 创建新博客：
