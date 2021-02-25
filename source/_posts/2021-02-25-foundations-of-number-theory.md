@@ -109,7 +109,7 @@ $$ a^{\varphi (n)} \equiv 1 \pmod{n} $$
 
 在证明欧拉定理之前，我们要证明：如果 $a \equiv b \pmod n$，且 $gcd(a, n) = 1$，则有 $gcd(b, n)=1$。也就是说**如果 $a$ 与 $b$ 模 $n$ 同余，且 $a$ 与 $n$ 互质，那么 $b$ 与 $n$ 也互质**。
 
-采用反正法，假设 $gcd(b, n)=t$，且 $t>1$。那么存在整数 $r$ 和 $s$，使 $b = rt$，$n= st$。因为 $ a \equiv b \pmod n $，则存在整数 $k$，使
+采用反正法，假设 $gcd(b, n)=t$，且 $t>1$。那么存在整数 $r$ 和 $s$，使 $b = rt$，$n= st$。因为 $a \equiv b \pmod n$，则存在整数 $k$，使
 $$a=kn+b=kst+rt=(ks+r)t$$
 因此，$a$ 与 $n$ 都能被 $t$ 整除，且 $t>1$。这与条件 $gcd(a, n) = 1$ 相矛盾，因此 $gcd(b, n)=1$。
 
