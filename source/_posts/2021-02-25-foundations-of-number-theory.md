@@ -69,7 +69,7 @@ $$ 1\cdot2 \dots \cdot (p-1)\cdot a^{p-1} \equiv  r_1 \cdot r_2 \dots \cdot r_{p
 
 $$ W \cdot a^{p-1} \equiv W {\pmod p}$$
 
-因为 $p$ 为质数，所以 $gcd(W, p) = 1$，因此根据模算数的消除率，等式两边消去 $W$ 得到
+因为 $p$ 为质数，所以 $gcd(W, p) = 1$，因此根据模算数的消除律，等式两边消去 $W$ 得到
 
 $$ a^{p-1}\equiv 1{\pmod {p}} $$
 
@@ -93,7 +93,7 @@ $$ \varphi (12)=12(1 - {\frac {1}{2}})(1 - {\frac {1}{3}}) = 4 $$
 2. 如果 $m$，$n$ 互质，那么：
    $$ \varphi (mn)=\varphi (m)\varphi (n) $$
 
-3. 如果 $p$ 是一个质数，$k$ 是大于等于1的正整数。那么：
+3. 如果 $p$ 是一个质数，$k$ 是大于等于 1 的正整数。那么：
    $$ \varphi (p^k)=p^k-p^{k-1} $$
 
 4. $n$ 的所有质因数的欧拉函数和为 $n$。
@@ -143,7 +143,7 @@ $$ W \cdot a^{\varphi(n)} \equiv W {\pmod p}$$
 
 $$ a^{\varphi(n)}\equiv 1{\pmod {p}} $$
 
-上面的证明过程与费马小定理的证明过程非常相似。实际上当 n 为质数时，因为 $\varphi (n)=n-1$，所以有：
+上面的证明过程与费马小定理的证明过程非常相似。实际上当 $n$ 为质数时，因为 $\varphi (n)=n-1$，所以有：
 
 $$ a^{n-1}\equiv 1{\pmod {n}} $$
 
