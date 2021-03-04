@@ -8,9 +8,11 @@ tags:
 mathjax: true
 ---
 
-在同余理论中，模 $n$ 的互质同余类构成一个乘法群，称为**整数模 n 乘法群**（multiplicative group of integers modulo n）。表示为 $\mathbb Z _n^*$，或者 $\mathbb Z _n^\times$、$(\mathbb{Z}/n\mathbb{Z})^*$、$(\mathbb{Z}/n\mathbb{Z})^\times$。这个群是数论的基石，在密码学、整数分解和素性测试中均有运用。
+在同余理论中，模 $n$ 的互质同余类构成一个乘法群，称为**整数模 n 乘法群**（multiplicative group of integers modulo n）。这个群是数论的基石，在密码学、整数分解和素性测试中均有运用。
 
 <!--more-->
+
+整数模 n 乘法群用符号表示为 $\mathbb Z _n^*$，或者 $\mathbb Z _n^\times$、$(\mathbb{Z}/n\mathbb{Z})^*$、$(\mathbb{Z}/n\mathbb{Z})^\times$。
 
 ## 整数模 n 乘法群的元素
 
