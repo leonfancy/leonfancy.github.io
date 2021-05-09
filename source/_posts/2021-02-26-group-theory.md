@@ -1,5 +1,5 @@
 ---
-title: 密码学-02-群论
+title: 密码学-02-群论基础
 date: 2021-02-26 23:25:46
 categories:
 - Math
