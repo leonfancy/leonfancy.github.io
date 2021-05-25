@@ -30,6 +30,37 @@ mathjax: true
 > 1. [密码学-02-群论基础](https://chenliang.org/2021/02/26/group-theory)
 > 2. [密码学-03-整数模 n 乘法群](https://chenliang.org/2021/03/04/multiplicative-group-of-integers-modulo-n)
 
+## 快速幂模运算
+
+幂模运算有一种快速计算方法，叫做**逐次平方法**（Exponentiation by squaring 或者 binary exponentiation），或者直接叫做**快速幂模运算**。
+
+计算 $g^x \pmod p$，其算法如下：
+
+1. 将指数 $x$ 做二进制展开，其中每个 $x_i$ 要么是 0 要么是 1：
+$$x = x_0 + x_1·2^1 + x_2·2^2 + \dots + x_r·2^r$$
+
+2. 使用逐次平方求出做模 $p$ 的 $g$ 的幂次表。
+$$
+\displaystyle {
+\begin{array}{rclcl}
+g^1 & \equiv & & & G_0 \pmod p \\
+g^2 & \equiv & G_0^2 & \equiv & G_1 \pmod p \\
+g^4 & \equiv & G_1^2 & \equiv & G_2 \pmod p \\
+& ...\\
+g^{2^r} & \equiv & G_{r-1}^2 & \equiv & G_r \pmod p \\
+\end{array}
+}
+$$
+   可以看到，在计算 $G_i$ 的时候，是用之前计算出的 $G_{i-1}$ 求平方，再对 $p$ 取模，参与计算的数始终不会大于 $p$，这大大简化了计算。这一步的算法复杂度是 $O(\log p)$。
+
+3. 最终计算下列乘积得到 $g^x$
+$$g^x \equiv G_0^{x_0} \cdot G_1^{x_1} \cdot G_2^{x_2} \cdots  G_r^{x_r} \pmod p$$
+   因为 $x_i$ 可以能为 0 或 1，上面这个乘积实际上是所有 $x_i$ 为 1 的哪些 $G_i$ 的乘积。这一步的算法复杂度也是 $O(\log p)$。
+
+使用逐次平方法平方法可以使幂模运算的时间复杂度达到 $O(\log p)$，因此幂模运算使用经典计算机可以很高效的计算。
+
+基于离散对数的非对称密码系统，利用了如下性质：给定 $g$ 和 $x$，做**幂模运算**（modular exponentiation）很快，即计算 $h=g^x \pmod p$ 很简单，但是给定 $g$ 和 $h$，求解**离散对数** $x=\log_gh$ 却很困难。所以一般将 $x$ 作为私钥，将 $h$ 作为公钥，即便别人知道了 $h$ 和 $g$，也无法求出 $x$。
+
 ## Diffie-Hellman 密钥交换
 
 离散对数问题一个典型的应用就是 Diffie-Hellman 密钥交换协议（Diffie-Hellman Key Exchange），简称 DHKE。使用这个协议，通信双方可以在完全没有对方任何预先信息的条件下，通过不安全信道创建起一个密钥。这个密钥只有通信双方知道，其他人无法获得，可以在后续的通信中作为对称密钥来加密通信内容。
@@ -59,3 +90,4 @@ mathjax: true
 [1] Discrete logarithm: https://en.wikipedia.org/wiki/Discrete_logarithm
 [2] Discrete logarithm records: https://en.wikipedia.org/wiki/Discrete_logarithm_records
 [3] Diffie–Hellman key exchange: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+[4] 数论概论（原书第4版），约瑟夫H.西尔弗曼，第 16 章: https://book.douban.com/subject/26863822/
