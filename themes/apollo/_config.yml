@@ -8,8 +8,13 @@ logo: /logo.png
 
 # Comment
 # e.g disqus: seansun
-disqus: chen-leon
-duoshuo:
+disqus:
+gitalk:
+    client_id: "11849e59f7c76ceea9ba"
+    client_secret: "372fe5487c8a39b4dce6be464fe0d4d6e94917d6"
+    owner: leonfancy
+    admin: ['leonfancy']
+    repo: leonfancy.github.io
 
 # Analytics
 # google-analytics:
