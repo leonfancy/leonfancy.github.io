@@ -19,7 +19,7 @@ if theme.gitalk
         var gitalk = new Gitalk({
             clientID: '#{theme.gitalk.client_id}',
             clientSecret: '#{theme.gitalk.client_secret}',
-            id: window.location.pathname,
+            id: md5(window.location.pathname),
             repo: '#{theme.gitalk.repo}',
             owner: '#{theme.gitalk.owner}',
             admin: '#{theme.gitalk.admin}',
