@@ -5,21 +5,32 @@ if theme.disqus
         var disqus_identifier = '#{page.path}';
         var disqus_title = '#{page.title}';
         var disqus_url = '#{config.url}/#{page.path}';
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        (function () {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     script(id='dsq-count-scr' src='//#{theme.disqus}.disqus.com/count.js' async)
 
-#gitalk-container
-
 if theme.gitalk
+    #gitalk-container
     script.
+        function simple_hash(str) {
+            var hash = 0;
+            for (var i = 0; i < str.length; i++) {
+                var char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return (hash >>> 0).toString(16);
+        }
+        console.log(simple_hash(window.location.pathname))
         var gitalk = new Gitalk({
             clientID: '#{theme.gitalk.client_id}',
             clientSecret: '#{theme.gitalk.client_secret}',
-            id: md5(window.location.pathname),
+            id: simple_hash(window.location.pathname),
             repo: '#{theme.gitalk.repo}',
             owner: '#{theme.gitalk.owner}',
             admin: '#{theme.gitalk.admin}',
