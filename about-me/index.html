@@ -123,10 +123,20 @@ mjx-container + br {
 <li>扫码加我微信：veewoo</li>
 </ul>
 <p><img src="/images/wechat-qr.png" style="max-width=250px"/></p>
-</div></article></div></main><footer><div class="paginator"></div><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+</div></article></div></main><footer><div class="paginator"></div><div id="gitalk-container"></div><script>function simple_hash(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        var char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return (hash >>> 0).toString(16);
+}
+console.log(simple_hash(window.location.pathname))
+var gitalk = new Gitalk({
     clientID: '11849e59f7c76ceea9ba',
     clientSecret: '372fe5487c8a39b4dce6be464fe0d4d6e94917d6',
-    id: md5(window.location.pathname),
+    id: simple_hash(window.location.pathname),
     repo: 'leonfancy.github.io',
     owner: 'leonfancy',
     admin: 'leonfancy',
