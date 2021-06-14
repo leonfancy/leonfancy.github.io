@@ -26,7 +26,6 @@ if theme.gitalk
             }
             return (hash >>> 0).toString(16);
         }
-        console.log(simple_hash(window.location.pathname))
         var gitalk = new Gitalk({
             clientID: '#{theme.gitalk.client_id}',
             clientSecret: '#{theme.gitalk.client_secret}',
